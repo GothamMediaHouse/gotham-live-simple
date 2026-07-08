@@ -1,57 +1,72 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { findEventBySlug } from "../../../lib/events";
 
 export default function EventPage({ params }) {
   const event = findEventBySlug(params.slug);
+  const [allowed, setAllowed] = useState(false);
+
+  useEffect(() => {
+    if (!event) return;
+
+    const access = sessionStorage.getItem(`gotham_event_${event.slug}`);
+    if (access === "true") {
+      setAllowed(true);
+    } else {
+      window.location.href = "/";
+    }
+  }, [event]);
 
   if (!event) {
     return (
-      <main className="page-shell">
-        <section className="event-container center-text">
-          <Image src="/gotham-logo.png" alt="Gotham Media House" width={140} height={140} />
+      <main className="page">
+        <div className="container center">
           <h1>Event Not Found</h1>
-          <p className="muted">Please check your access link or return to the portal.</p>
-          <Link className="outline-button" href="/">Back to Portal</Link>
-        </section>
+          <Link className="back-link" href="/">Return Home</Link>
+        </div>
       </main>
     );
   }
 
-  const embedUrl = `https://www.youtube.com/embed/${event.youtubeVideoId}?rel=0&modestbranding=1`;
+  if (!allowed) return null;
 
   return (
-    <main className="page-shell event-shell">
-      <div className="event-container">
+    <main className="page">
+      <div className="container">
         <header className="event-header">
-          <Image src="/gotham-logo.png" alt="Gotham Media House" width={120} height={120} />
-          <div>
-            <p className="eyebrow">Private Event</p>
-            <h1>{event.eventTitle}</h1>
-            <p className="muted">{event.clientName} · {event.eventDate}</p>
-          </div>
-          <span className="live-pill">● {event.status || "LIVE"}</span>
+          <Image
+            className="event-logo"
+            src="/images/logo.png"
+            alt="Gotham Media House"
+            width={104}
+            height={104}
+            priority
+          />
+          <Link className="back-link" href="/">Sign Out</Link>
         </header>
 
-        <section className="video-card">
+        <section className="event-card">
+          <p className="event-meta">{event.eventDate}</p>
+          <h1 className="event-title">{event.eventTitle}</h1>
+          <p className="subtitle" style={{ margin: "0 0 18px" }}>{event.clientName}</p>
+          <span className="live-badge"><span className="dot" /> {event.status || "Live"}</span>
+
           <div className="video-frame">
             <iframe
-              src={embedUrl}
+              src={`https://www.youtube.com/embed/${event.youtubeVideoId}?autoplay=1&rel=0`}
               title={event.eventTitle}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             />
           </div>
-        </section>
 
-        <section className="event-details">
-          <p>{event.description}</p>
-          <p className="security-note">This private stream is intended only for invited guests. Please do not share this link.</p>
+          <p className="private-note">
+            {event.description}<br />Produced by Gotham Media House.
+          </p>
         </section>
-
-        <footer className="event-footer">
-          Produced by Gotham Media House
-        </footer>
       </div>
     </main>
   );

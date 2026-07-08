@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
+import { useState } from "react";
 import { findEventByCredentials } from "../lib/events";
 
 export default function HomePage() {
@@ -17,69 +17,68 @@ export default function HomePage() {
 
     const event = findEventByCredentials(accessCode, password);
 
-    setTimeout(() => {
-      if (!event) {
-        setLoading(false);
-        setError("Invalid access code or password.");
-        return;
-      }
+    if (!event) {
+      setLoading(false);
+      setError("Access code or password is incorrect.");
+      return;
+    }
 
-      window.location.href = `/events/${event.slug}`;
-    }, 450);
+    sessionStorage.setItem(`gotham_event_${event.slug}`, "true");
+    window.location.href = `/events/${event.slug}`;
   }
 
   return (
-    <main className="page-shell home-shell">
-      <div className="background-glow" />
-      <section className="login-wrap">
-        <div className="logo-mark">
-          <Image
-            src="/gotham-logo.png"
-            alt="Gotham Media House"
-            width={210}
-            height={210}
-            priority
-          />
-        </div>
-
-        <p className="eyebrow">Private Livestream Portal</p>
-        <h1>Secure access for invited guests.</h1>
-        <p className="intro">
-          Enter your event credentials below to access your private Gotham Media House livestream.
-        </p>
-
-        <form className="access-card" onSubmit={handleSubmit}>
-          <div>
-            <label>Access Code</label>
-            <input
-              value={accessCode}
-              onChange={(e) => setAccessCode(e.target.value)}
-              placeholder="Example: DEMO2026"
-              autoComplete="off"
+    <main className="page">
+      <div className="container login-shell">
+        <section className="center" style={{ width: "100%" }}>
+          <div className="logo-wrap">
+            <Image
+              className="logo"
+              src="/images/logo.png"
+              alt="Gotham Media House"
+              width={205}
+              height={205}
+              priority
             />
           </div>
 
-          <div>
-            <label>Password</label>
-            <input
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              placeholder="Enter password"
-            />
-          </div>
+          <p className="kicker">Welcome</p>
+          <h1 className="title">Private Livestream Portal</h1>
+          <p className="subtitle">Secure access for invited guests.</p>
 
-          {error && <p className="error">{error}</p>}
+          <form className="login-card form-stack" onSubmit={handleSubmit}>
+            <div>
+              <label className="label">Access Code</label>
+              <input
+                className="input"
+                value={accessCode}
+                onChange={(e) => setAccessCode(e.target.value)}
+                placeholder="Enter your access code"
+                autoComplete="off"
+              />
+            </div>
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Opening Event..." : "Enter Event"}
-          </button>
-        </form>
+            <div>
+              <label className="label">Password</label>
+              <input
+                className="input"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+              />
+            </div>
 
-        <footer>
-          Need assistance? Contact Gotham Media House.
-        </footer>
-      </section>
+            {error && <p className="error">{error}</p>}
+
+            <button className="button" type="submit">
+              {loading ? "Entering..." : "Enter Event"}
+            </button>
+          </form>
+
+          <p className="footer-note">Professional. Reliable. Purpose-Driven.</p>
+        </section>
+      </div>
     </main>
   );
 }

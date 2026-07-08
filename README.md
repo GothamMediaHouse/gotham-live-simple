@@ -1,10 +1,12 @@
-# Gotham Live Simple Logo Version
+# Gotham Live White Simple
 
-## Add/edit events
+A simple Gotham Media House private livestream portal for Vercel.
+
+## Add or edit events
 
 Edit:
 
-```text
+```txt
 lib/events.js
 ```
 
@@ -12,11 +14,11 @@ Example:
 
 ```js
 {
-  slug: "client-event",
+  slug: "client-town-hall",
   clientName: "Client Name",
-  eventTitle: "Event Title",
+  eventTitle: "Annual Town Hall",
   accessCode: "CLIENT2026",
-  password: "clientpassword",
+  password: "PrivatePassword",
   youtubeVideoId: "YOUTUBE_VIDEO_ID",
   eventDate: "July 2026",
   status: "LIVE",
@@ -24,22 +26,21 @@ Example:
 }
 ```
 
-## Test login
-
-Access Code: `DEMO2026`
-
-Password: `gothamlive`
-
 ## YouTube video ID
 
-If your YouTube URL is:
+If your YouTube link is:
 
-```text
+```txt
 https://www.youtube.com/watch?v=AbCdEf12345
 ```
 
 Use:
 
-```text
+```txt
 AbCdEf12345
 ```
+
+## Test login
+
+Access Code: `DEMO2026`
+Password: `gothamlive`
